@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SinucaFlix - Atletas</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.11"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/">Modalidades</a>
+            <a href="atletas.html" class="active">Atletas</a>
+        </nav>
+        <div class="search-bar">
+            <input type="search" 
+                   name="q" 
+                   placeholder="Buscar atleta..." 
+                   hx-get="/buscar-atleta" 
+                   hx-trigger="keyup changed delay:500ms" 
+                   hx-target="#grid-atletas">
+        </div>
+    </header>
+
+    <main>
+        <div class="section-header">
+            <h2>Grandes Nomes da Sinuca</h2>
+            <button class="btn-add" hx-get="/form-novo-atleta" hx-target="#form-container">
+                + Adicionar Atleta
+            </button>
+        </div>
+
+        <div class="grid" id="grid-atletas">
+            
+            {% for atleta in atletas %}
+                {% include 'fragmentos/card_atleta.html' %}
+            {% else %}
+                <p style="text-align: center; width: 100%; grid-column: 1 / -1;">Nenhum atleta cadastrado ainda.</p>
+            {% endfor %}
+
+        </div>
+
+        <div id="form-container"></div>
+    </main>
+
+    <div id="modal-overlay">
+        <div id="modal-content">
+            <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+    </div>
+
+    <script>
+        const overlay = document.getElementById('modal-overlay');
+        const modalContent = document.getElementById('modal-content');
+        const closeBtn = document.getElementById('close-modal');
+
+        // Função para abrir o modal
+        function openModal(cardElement) {
+            // Limpa conteúdo anterior, mantendo o botão de fechar
+            const existingCard = modalContent.querySelector('.card');
+            if (existingCard) existingCard.remove();
+
+            // Clona o card clicado
+            const clonedCard = cardElement.cloneNode(true);
+            
+            // Remove as ações do CRUD no clone (para não mostrar os botões no modo tela cheia)
+            const actions = clonedCard.querySelector('.card-actions');
+            if (actions) actions.remove();
+
+            // Adiciona o clone ao modal
+            modalContent.appendChild(clonedCard);
+            
+            // Ativa o overlay
+            overlay.classList.add('active');
+            // Impede rolagem da página atrás do modal
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        // Função para fechar o modal
+        function closeModal() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = ''; // Restaura rolagem normal
+        }
+
+        // Event Delegation: Ouve cliques na página toda, mas só age se for um card
+        document.addEventListener('click', function(e) {
+            // Encontra o card mais próximo do clique
+            const card = e.target.closest('.card');
+            
+            // Verifica se clicou num card E se não clicou dentro do modal já aberto
+            if (card && !e.target.closest('#modal-content')) {
+                openModal(card);
+            }
+        });
+
+        // Fechar no botão X
+        closeBtn.addEventListener('click', closeModal);
+
+        // Fechar ao clicar no fundo escuro
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeModal();
+            }
+        });
+
+        // Fechar com a tecla ESC do teclado
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

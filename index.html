@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SinucaFlix - Modalidades</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.11"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="/" class="active">Modalidades</a>
+            <a href="atletas.html">Atletas</a>
+        </nav>
+        <div class="search-bar">
+            <input type="search" 
+                   name="q" 
+                   placeholder="Buscar modalidade..." 
+                   hx-get="/buscar-modalidade" 
+                   hx-trigger="keyup changed delay:500ms" 
+                   hx-target="#grid-modalidades">
+        </div>
+    </header>
+
+    <main>
+        <div class="section-header">
+            <h2>Modalidades de Sinuca</h2>
+            <button class="btn-add" hx-get="/form-nova-modalidade" hx-target="#form-container">
+                + Adicionar Modalidade
+            </button>
+        </div>
+
+        <div id="form-container"></div>
+
+        <div class="grid" id="grid-modalidades">
+            {% for modalidade in modalidades %}
+                {% include 'fragmentos/card_modalidade.html' %}
+            {% else %}
+                <p style="text-align: center; width: 100%; grid-column: 1 / -1;">Nenhuma modalidade cadastrada ainda.</p>
+            {% endfor %}
+        </div>
+    </main>
+
+    <div id="modal-overlay">
+        <div id="modal-content">
+            <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+    </div>
+
+    <script>
+        // isola os nos essenciais do dom
+        const overlay = document.getElementById('modal-overlay');
+        const modalContent = document.getElementById('modal-content');
+        const closeBtn = document.getElementById('close-modal');
+
+        function openModal(cardElement) {
+
+            // remove a ultima injecao se houver
+            const existingCard = modalContent.querySelector('.card');
+            if (existingCard) existingCard.remove();
+
+            // instanciacao
+            const clonedCard = cardElement.cloneNode(true);
+            
+            // tela centralizada inerte
+            const actions = clonedCard.querySelector('.card-actions');
+            if (actions) actions.remove();
+
+            modalContent.appendChild(clonedCard);
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden'; 
+        }
+
+        // desliga a matriz na css para escurecer
+        function closeModal() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = ''; 
+        }
+
+
+        document.addEventListener('click', function(e) {
+            // checa se o disparo ocorreu perto de um parente confiavel card css
+            const card = e.target.closest('.card');
+            
+            // trava a checagem dupla
+            if (card && !e.target.closest('#modal-content')) {
+                openModal(card);
+            }
+        });
+
+        closeBtn.addEventListener('click', closeModal);
+
+        overlay.addEventListener('click', function(e) {
+            if (e.target === overlay) {
+                closeModal();
+            }
+        });
+
+        // interrupcoes nativas do navegador
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && overlay.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<div class="card" 
+     {% if modalidade.imagem_url %}
+        style="background-image: url('{{ modalidade.imagem_url }}'); background-color: #222; background-size: cover; background-position: center;"
+     {% else %}
+        style="background-image: none; background-color: #222; background-size: cover; background-position: center;"
+     {% endif %}>
+    
+    <div class="card-actions">
+        <button class="btn-icon" title="Excluir" 
+                hx-delete="/modalidades/{{ modalidade.id }}" 
+                hx-target="closest .card"
+                hx-swap="outerHTML"
+                onclick="event.stopPropagation();">&#10006;</button>
+    </div>
+    
+    <div class="card-info" style="z-index: 2; width: 100%; pointer-events: none;">
+        <div class="card-title">{{ modalidade.nome }}</div>
+        {% if modalidade.descricao %}
+            <p style="font-size: 0.85rem; color: #ddd; margin-top: 5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; text-shadow: 1px 1px 2px black;">{{ modalidade.descricao }}</p>
+        {% endif %}
+    </div>
+</div>

@@ -1,0 +1,20 @@
+<form hx-post="/modalidades" 
+      hx-target="#grid-modalidades" 
+      hx-swap="beforeend" 
+      id="form-add-modalidade" 
+      style="background-color: var(--card-bg); padding: 20px; border-radius: 6px; margin-bottom: 30px; width: 100%; border: 1px solid #555;">
+    
+    <h3 style="margin-bottom: 15px; color: var(--accent-color);">Adicionar Nova Modalidade</h3>
+    
+    <div style="display: flex; gap: 15px; margin-bottom: 15px; flex-wrap: wrap;">
+        <input type="text" name="nome" placeholder="Nome da Modalidade (ex: Snooker)" required style="flex: 1; min-width: 200px; padding: 10px; border-radius: 4px; border: none; background: #111; color: white;">
+        <input type="url" name="imagem_url" placeholder="URL da Foto (https://...)" style="flex: 1; min-width: 200px; padding: 10px; border-radius: 4px; border: none; background: #111; color: white;">
+    </div>
+
+    <textarea name="descricao" placeholder="Descrição da modalidade..." style="width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 4px; border: none; background: #111; color: white; resize: vertical; min-height: 80px;"></textarea>
+    
+    <div style="display: flex; gap: 10px;">
+        <button type="submit" class="btn-add" onclick="setTimeout(() => document.getElementById('form-add-modalidade').remove(), 100)">Salvar Modalidade</button>
+        <button type="button" class="btn-add" style="background-color: #555;" onclick="document.getElementById('form-add-modalidade').remove()">Cancelar</button>
+    </div>
+</form>

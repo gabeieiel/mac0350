@@ -1,0 +1,5 @@
+{% for atleta in atletas %}
+    {% include 'fragmentos/card_atleta.html' %}
+{% else %}
+    <p style="text-align: center; width: 100%; grid-column: 1 / -1;">Nenhum atleta encontrado com essa busca.</p>
+{% endfor %}

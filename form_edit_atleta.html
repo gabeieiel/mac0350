@@ -1,0 +1,16 @@
+<form hx-put="/atletas/{{ atleta.id }}" 
+      hx-target="this" 
+      hx-swap="outerHTML" 
+      style="display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 20px; border: 2px solid var(--accent-color); background-color: var(--card-bg); border-radius: 6px; aspect-ratio: 16 / 9; overflow: hidden; position: relative;">
+    
+    <h4 style="margin-bottom: 15px; color: var(--text-color); z-index: 2;">Editar: {{ atleta.nome }}</h4>
+    
+    <input type="text" name="nome" value="{{ atleta.nome }}" required style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: none; background: #111; color: white; z-index: 2;">
+    
+    <textarea name="descricao" placeholder="Biografia" style="width: 100%; padding: 8px; margin-bottom: 15px; border-radius: 4px; border: none; background: #111; color: white; resize: vertical; z-index: 2; height: 60px;">{{ atleta.descricao }}</textarea>
+    
+    <div style="display: flex; gap: 10px; z-index: 2; width: 100%;">
+        <button type="submit" class="btn-add" style="flex: 1; padding: 8px;">Salvar</button>
+        <button type="button" class="btn-add" style="background-color: #555; padding: 8px;" hx-get="/buscar-atleta" hx-target="#grid-atletas">Cancelar</button>
+    </div>
+</form>
