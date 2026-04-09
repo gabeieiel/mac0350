@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="pt-br"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEM2-DOM</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="Exerc%C3%ADcios%20-%20JS%20Avan%C3%A7ado_%20DOM%20e%20Mem%C3%B3ria_files/css2.css" rel="stylesheet">
+    <style>
+        :root {
+            --background-color: #292827;
+            --surface-color: #363636;
+            --primary-text-color: #e0e0e0;
+            --secondary-text-color: #a0a0a0;
+            --accent-color-1: #ff690a;
+            --accent-color-2: #ff690a;
+            --border-color: #444;
+            --code-bg: #404040;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.7;
+            background-color: var(--background-color);
+            color: var(--primary-text-color);
+            margin: 0;
+            padding: 2rem 1.5rem;
+        }
+
+        .container { 
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1, h2, h3 { color: var(--accent-color-1); font-weight: 700; }
+        h1 { border-bottom: 2px solid var(--border-color); padding-bottom: 10px; margin-bottom: 30px; }
+        
+        .exercise-box {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-left: 5px solid var(--accent-color-1);
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+        }
+
+        code {
+            background-color: var(--code-bg);
+            color: var(--accent-color-2);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        button {
+            background-color: var(--code-bg);
+            color: var(--accent-color-1);
+            border: 1px solid var(--accent-color-1);
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 1rem;
+            margin-top: 15px;
+            transition: all 0.2s;
+        }
+
+        button:hover { background-color: var(--accent-color-1); color: #fff; }
+        
+        input, select {
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border-color);
+            background: var(--background-color);
+            color: var(--primary-text-color);
+            margin-top: 10px;
+        }
+
+        .output-text { display: inline-block; margin-left: 15px; font-weight: bold; color: #fff; }
+        ul.dynamic-list { margin-top: 15px; padding-left: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Exercícios Práticos: DOM, Eventos e Storage</h1>
+    <p>Utilize a tag <code>&lt;script&gt;</code> no final deste arquivo. <strong>Regra de Ouro:</strong> Não altere o HTML. Use apenas <code>addEventListener</code> e <code>DOMContentLoaded</code>!</p>
+
+    <div class="exercise-box">
+        <h3>1. Separando o JS do HTML</h3>
+        <p>Remova a dependência do <code>onclick</code>. Capture o botão abaixo pelo seu ID e adicione um <em>Event Listener</em> de 'click' que mude o texto dele para "Fui clicado via Listener!".</p>
+        <button id="btn-listener">Me clique (sem onclick)</button>
+    </div>
+
+    <div class="exercise-box">
+        <h3>2. Criação Dinâmica (createElement)</h3>
+        <p>Digite algo no campo de texto e clique em adicionar. O seu JS deve ler o <code>.value</code> do input, usar <code>document.createElement('li')</code> e dar um <code>append</code> na lista vazia abaixo.</p>
+        <input type="text" id="input-item" placeholder="Novo item da lista...">
+        <button id="btn-add">Adicionar</button>
+        <ul id="lista-itens" class="dynamic-list"></ul>
+    </div>
+
+    <div class="exercise-box">
+        <h3>3. O Cronômetro (setInterval)</h3>
+        <p>Crie uma lógica para um cronômetro. Ao clicar em "Iniciar", use <code>setInterval</code> para aumentar o número do visor a cada 1 segundo (1000ms).</p>
+        <button id="btn-iniciar">Iniciar Cronômetro</button>
+        <span id="visor-cronometro" class="output-text">0</span>
+    </div>
+
+    <div class="exercise-box">
+        <h3>4. Memória com Local Storage</h3>
+        <p>Escolha um time no menu suspenso. O JS deve escutar o evento <code>change</code> do menu, atualizar o texto "Nenhum selecionado" e <strong>salvar a escolha no Local Storage</strong>. <br><em>Desafio:</em> Ao recarregar a página, o código deve buscar o valor salvo no Storage e exibi-lo automaticamente.</p>
+        
+        <select id="select-time" title="Escolha um time">
+            <option value="" selected="selected">Escolha um time...</option>
+            <option value="São Paulo">São Paulo</option>
+            <option value="Corinthians">Corinthians</option>
+            <option value="Palmeiras">Palmeiras</option>
+            <option value="Santos">Santos</option>
+        </select>
+        <span id="time-selecionado" class="output-text">Nenhum selecionado</span>
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        
+        
+        // --- Exercício 1 ---
+        const botao = document.getElementById("btn-listener");
+        
+        botao.addEventListener("click", myFunction);
+
+        function myFunction() {
+            if (botao.innerHTML === 'Me clique (sem onclick)'){
+                botao.innerHTML = 'Fui clicado via Listener!';
+            }
+
+            else {
+                botao.innerHTML = 'Me clique (sem onclick)';
+            }
+
+        }
+        
+        
+        // --- Exercício 2 ---
+        const inputItem = document.getElementById("input-item");
+        const btnAdd = document.getElementById("btn-add");
+        const listaItens = document.getElementById("lista-itens");
+
+        btnAdd.addEventListener("click", () => {
+            const valor = inputItem.value.trim(); // Evita adicionar itens vazios ou só com espaços
+            
+            if (valor !== "") {
+                const li = document.createElement("li");
+                li.textContent = valor;
+                listaItens.appendChild(li);
+
+                inputItem.value = ""; // Limpa o input após adicionar
+                inputItem.focus();    // Devolve o cursor para o input (boa usabilidade)
+            }
+        });
+        
+        
+        // --- Exercício 3 ---
+        const btnIniciar = document.getElementById("btn-iniciar");
+        const visorCronometro = document.getElementById("visor-cronometro");
+        let tempo = 0;
+        let intervalo = null;
+
+        btnIniciar.addEventListener("click", () => {
+            if (intervalo !== null) return; 
+
+            intervalo = setInterval(() => {
+                tempo++;
+                visorCronometro.textContent = tempo;
+            }, 1000);
+        });
+        
+        
+        // --- Exercício 4 ---
+        const selectTime = document.getElementById("select-time");
+        const timeSelecionado = document.getElementById("time-selecionado");
+        const STORAGE_KEY = "timeEscolhidoFavorito";
+
+        const timeSalvo = localStorage.getItem(STORAGE_KEY);
+
+        if (timeSalvo) {
+            timeSelecionado.textContent = timeSalvo;
+            selectTime.value = timeSalvo; // Atualiza a combobox para refletir o valor salvo
+        }
+
+        selectTime.addEventListener("change", (e) => {
+            const escolhido = e.target.value;
+            
+            if (escolhido !== "") {
+                timeSelecionado.textContent = escolhido;
+                localStorage.setItem(STORAGE_KEY, escolhido);
+            } else {
+                timeSelecionado.textContent = "Nenhum selecionado";
+                localStorage.removeItem(STORAGE_KEY); // Limpa a memória se voltar para a opção vazia
+            }
+
+        });
+        
+    });
+</script>
+
+
+</body></html>
